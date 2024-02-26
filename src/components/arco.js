@@ -1,8 +1,6 @@
 
-// =========================================================================
 export class Arco {
 
-    // -----------------------------------------
     constructor(scene) {
         this.relatedScene = scene;
     }
@@ -25,7 +23,6 @@ export class Arco {
         this.arco.setX(updateX).setY(updateY);
     }
 
-
     get() {
         return this.arco;
     }
@@ -34,7 +31,6 @@ export class Arco {
 // =========================================================================
 export class Flecha {
 
-    // -----------------------------------------
     constructor(scene) {
         this.relatedScene = scene;
     }
@@ -43,8 +39,8 @@ export class Flecha {
 
         this.flecha = this.relatedScene.physics.add.sprite(x, y, 'flecha');
 
-        this.flecha.setScale(1, 1).setDepth(35).setVelocityX(100);
-        this.flecha.body.setAllowGravity(false);
+        this.flecha.setScale(1, 1).setDepth(35).setVelocityX(400).setVelocityY(-1000);
+        this.flecha.body.setAllowGravity(true);
 
         console.log(this.flecha);
     }
@@ -61,39 +57,5 @@ export class Flecha {
     
     get() {
         return this.flecha;
-    }
-}
-
-// =========================================================================
-export class FlechaC {
-
-    // -----------------------------------------
-    constructor(scene) {
-        this.relatedScene = scene;
-    }
-
-    create(x, y) {
-
-        this.flechac = this.relatedScene.physics.add.sprite(x, y, 'flecha-c');
-
-        this.flechac.setScale(1, 1.4).setDepth(32).setVelocityX(100);
-        this.flechac.body.setAllowGravity(false);
-
-        console.log(this.flechac);
-    }
-
-    update(x, y) {
-
-        if (this.relatedScene.jugador.get().body.touching.down) return;
-
-        const updateX = x - 5;
-        const updateY = y + 12;
-
-        this.flechac.setX(updateX).setY(updateY);
-    }
-
-
-    get() {
-        return this.flechac;
     }
 }

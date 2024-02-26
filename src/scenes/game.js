@@ -1,10 +1,10 @@
 // =========================================================================================
-//  F l a p p y  J o n
+//  T i r o  c o n  A r c o
 // 
 // -----------------------------------------------------------------------------------------
 import { FondoScroll } from '../components/fondoscroll.js';
 import { Jugador } from '../components/jugador.js';
-import { Arco, Flecha, FlechaC } from '../components/arco.js';
+import { Arco, Flecha } from '../components/arco.js';
 import { Marcador } from '../components/marcador.js';
 import { Textos } from '../components/textos.js';
 import { BotonNuevaPartida, BotonFullScreen } from '../components/boton-nuevapartida.js';
@@ -12,7 +12,6 @@ import { play_sonidos } from '../functions/functions.js';
 import { Settings } from './settings.js';
 import { TileSuelo } from '../components/tile-suelo.js';
 
-// ============================================================================
 export class Game extends Phaser.Scene {
 
   constructor() {
@@ -26,7 +25,6 @@ export class Game extends Phaser.Scene {
     this.jugador = new Jugador(this);
     this.arco = new Arco(this);
     this.flecha = new Flecha(this);
-    this.flechac = new FlechaC(this);
 
     const ancho = this.sys.game.config.width;
     const alto = this.sys.game.config.height;
@@ -48,23 +46,20 @@ export class Game extends Phaser.Scene {
     this.botoninicio = new BotonNuevaPartida(this);
   }
 
-  preload() {
-    
-    // loader(this);
-  }
+  preload() {}
 
   create() {
 
     this.sonidos_set();
     this.set_camerasMain();
     this.set_cameras_marcadores();
+    this.set_fases_lanzamiento();
 
     this.fondoscroll.create();
     this.tilesuelo.create();
     this.jugador.create();
     this.arco.create(this.jugador.get().x, this.jugador.get().y);
     this.flecha.create(this.jugador.get().x, this.jugador.get().y);
-    this.flechac.create(this.jugador.get().x, this.jugador.get().y);
 
     this.marcadorPtos.create();
     this.marcadorHi.create();
@@ -76,22 +71,19 @@ export class Game extends Phaser.Scene {
       show_mouseXY: true
     }
 
-    // this.cameras.main.startFollow(this.jugador.get());
+    this.cameras.main.startFollow(this.flecha.get());
 
     this.crear_colliders();
   }
   
-  // ================================================================
   update() {
 
     // this.pointer_showXY(this.mouse_showXY);
     this.jugador.update();
     this.arco.update(this.jugador.get().x, this.jugador.get().y);
     this.flecha.update(this.jugador.get().x, this.jugador.get().y);
-    this.flechac.update(this.jugador.get().x, this.jugador.get().y);
   }
 
-  // ================================================================
   sonidos_set() {
 
     /* this.sonidoMusicaFondo = this.sound.add('musica-fondo');
@@ -103,7 +95,6 @@ export class Game extends Phaser.Scene {
     this.sonidoGameOver = this.sound.add('gameover'); */
   }
   
-  // ================================================================
   set_camerasMain() {
 
     const { numberWidths, numberHeights } = Settings.getScreen();
@@ -121,7 +112,6 @@ export class Game extends Phaser.Scene {
     console.log(this.physics.world);
   }
 
-  // ================================================================
   set_cameras_marcadores() {
 
     var { x, y, ancho, alto, scrollX, scrollY } = Settings.getCameraScores();
@@ -132,7 +122,15 @@ export class Game extends Phaser.Scene {
     // console.log(this.mapa_scores);
   }
 
-  // ================================================================
+  set_fases_lanzamiento() {
+
+    this.faseLanzamiento = {
+      pre: true,
+      lanzando: false,
+      banderaColision: false
+    };
+  }
+
   texto_preparado() {
 
     const left = Math.floor(this.sys.game.config.width / 2.2);
@@ -148,13 +146,26 @@ export class Game extends Phaser.Scene {
     setTimeout(() => this.txt.get().destroy(), 1900);
   }
 
-  // ================================================================
   crear_colliders() {
 
     this.physics.add.collider(this.jugador.get(), this.tilesuelo.get());
+    this.physics.add.collider(this.flecha.get(), this.tilesuelo.get(), () => {
+
+      this.faseLanzamiento.pre = true;
+      this.faseLanzamiento.lanzando = false;
+      this.jugador.get().setY(this.sys.game.config.height - 120);
+      this.flecha.get().body.setAllowGravity(false);
+      this.flecha.get().setVelocityX(0);
+      // this.flecha.get().setVelocityX(900);
+      // this.flecha.get().setVelocityY(-950);
+
+    }, () => {
+
+      if (this.faseLanzamiento.banderaColision) return false;
+      return true;
+    });
   }
 
-  // ================================================================
   pointer_showXY({create, show_mouseXY}) {
     
     if (!show_mouseXY) return;

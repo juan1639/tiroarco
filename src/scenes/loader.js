@@ -1,5 +1,4 @@
 
-// =================================================================================
 export function loader(scene) {
 
   // scene.load.json('settings', '../src/json/settings.json');

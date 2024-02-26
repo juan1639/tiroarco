@@ -1,9 +1,7 @@
 import { centrar_txt } from "../functions/functions.js";
 
-// =======================================================================
 export class Textos {
 
-    // -----------------------------------------------------------
     constructor(scene) {
         this.relatedScene = scene;
     }
@@ -11,7 +9,18 @@ export class Textos {
     create(args) {
 
         const {
-            x, y, texto, size, style, offx, offy, col, blr, fillShadow, fll, family, screenWidth, multip
+            x, y,
+            texto,
+            size,
+            style,
+            offx, offy,
+            col,
+            blr,
+            fillShadow,
+            fll,
+            family,
+            screenWidth,
+            multip
         } = args;
 
         console.log(args);
