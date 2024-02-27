@@ -30,12 +30,22 @@ export class Jugador {
 
     update() {
 
+        this.incrementando_fuerza_pulsando();
+        this.pulsacion_inicial();
+        this.soltar_lanzarFlecha();
+    }
+
+    incrementando_fuerza_pulsando() {
+
         if (this.jugador.getData('ini-pulsacion') && !this.jugador.getData('fin-pulsacion')) {
 
             console.log('...sum');
             this.jugador.setData('pow', this.jugador.getData('pow') + this.jugador.getData('inc-pow'));
             this.relatedScene.barrafuerza.get().setScale(this.jugador.getData('pow'), 1);
         }
+    }
+
+    pulsacion_inicial() {
 
         if (this.jugador.body.touching.down &&
             !this.jugador.getData('fin-pulsacion') &&
@@ -47,6 +57,9 @@ export class Jugador {
             console.log('pulsando...');
             this.jugador.setData('ini-pulsacion', true);
         }
+    }
+
+    soltar_lanzarFlecha() {
 
         if (this.jugador.body.touching.down &&
             !this.jugador.getData('fin-pulsacion') &&
@@ -62,7 +75,7 @@ export class Jugador {
 
             this.relatedScene.flecha.get().getChildren()[Settings.flecha.lanzamientoNro]
                 .setVelocityX(this.jugador.getData('pow') * this.jugador.getData('multiplicador'))
-                .setVelocityY(-this.jugador.getData('pow') * (this.jugador.getData('multiplicador') + 40));
+                .setVelocityY(-this.jugador.getData('pow') * (this.jugador.getData('multiplicador') - 50));
 
             this.relatedScene.flecha.get().getChildren()[Settings.flecha.lanzamientoNro].body
                 .setAllowGravity(true);
@@ -73,7 +86,7 @@ export class Jugador {
             this.jugador.setData('pow', 0.1);
         }
     }
-    
+
     get() {
         return this.jugador;
     }
