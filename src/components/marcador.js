@@ -14,7 +14,7 @@ export class Marcador {
 
         let texto = '';
 
-        if (id === 0) texto = `${txt}${Settings.getPuntos().score}`;
+        if (id === 0) texto = `${txt}${Settings.getPuntos()}`;
         if (id === 2) texto = `${txt}${Settings.getRecord()}`;
 
         this.marcador = this.relatedScene.add.text(x, y, texto, {

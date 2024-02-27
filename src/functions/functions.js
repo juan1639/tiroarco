@@ -1,6 +1,11 @@
 
-// =================================================================================
+function dibuja_rectangulos(scene, args) {
 
+  const {x, y, ancho, alto, pad} = args;
+  
+  scene.add.rectangle(x - pad, y - pad, ancho + pad * 2, alto + pad * 2, 0x111111)
+    .setStrokeStyle(3, 0xff9910).setOrigin(0, 0);
+}
 
 // =================================================================================
 function centrar_txt(texto, anchoScreen) {
@@ -18,6 +23,7 @@ function play_sonidos(id, loop, volumen) {
 }
 
 export {
+  dibuja_rectangulos,
   centrar_txt,
   play_sonidos
 };

@@ -9,6 +9,7 @@ export function loader(scene) {
   scene.load.spritesheet('boton-fullscreen', './src/img/boton-fullscreen.png', {frameWidth: 64, frameHeight: 64});
   
   scene.load.image('tile-suelo', './src/img/tile-suelo.png');
+  scene.load.image('barra-fuerza', './src/img/barra-energia.png');
 
   // scene.load.image('arco', './src/img/arco1.png');
   scene.load.image('arco', './src/img/arco-v2.png');

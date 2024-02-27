@@ -20,10 +20,18 @@ export class Settings {
         nroFlechas: 10,
         lanzamientoNro: 0,
         changeCam: false,
-        iniX: -100,
-        iniY: 200,
+        iniX: -200,
+        iniY: 350,
         offSetX: 12,
         offSetY: 80
+    };
+
+    static barraFuerza = {
+        x: 0,
+        y: 60,
+        ancho: 400,
+        alto: 30,
+        padding: 7
     };
 
     static depth = {

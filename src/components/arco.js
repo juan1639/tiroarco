@@ -1,3 +1,4 @@
+import { dibuja_rectangulos } from "../functions/functions.js";
 import { Settings } from "../scenes/settings.js";
 
 export class Arco {
@@ -44,7 +45,7 @@ export class Flecha {
 
             this.flecha.create(
                 Settings.flecha.iniX,
-                this.relatedScene.sys.game.config.height - Settings.flecha.iniY - i * 20,
+                Settings.flecha.iniY + i * 20,
                 'flecha'
             );
         }
@@ -56,6 +57,14 @@ export class Flecha {
             fl.setData('estado', 'null'); // null / pre / lanzando / clavada
 
             if (index === 0) fl.setData('estado', 'pre');
+        });
+
+        dibuja_rectangulos(this.relatedScene, {
+            x: Settings.flecha.iniX - 50,
+            y: Settings.flecha.iniY,
+            ancho: 100,
+            alto: 20 * Settings.flecha.nroFlechas,
+            pad: 10
         });
 
         console.log(this.flecha);

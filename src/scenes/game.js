@@ -3,6 +3,7 @@
 // 
 // -----------------------------------------------------------------------------------------
 import { FondoScroll } from '../components/fondoscroll.js';
+import { BarraFuerza } from '../components/barra-fuerza.js';
 import { Jugador } from '../components/jugador.js';
 import { Arco, Flecha } from '../components/arco.js';
 import { Marcador } from '../components/marcador.js';
@@ -22,6 +23,7 @@ export class Game extends Phaser.Scene {
 
     this.fondoscroll = new FondoScroll(this);
     this.tilesuelo = new TileSuelo(this);
+    this.barrafuerza = new BarraFuerza(this);
     this.jugador = new Jugador(this);
     this.arco = new Arco(this);
     this.flecha = new Flecha(this);
@@ -56,6 +58,7 @@ export class Game extends Phaser.Scene {
 
     this.fondoscroll.create();
     this.tilesuelo.create();
+    this.barrafuerza.create();
     this.jugador.create();
     this.arco.create(this.jugador.get().x, this.jugador.get().y);
     this.flecha.create();
@@ -130,14 +133,16 @@ export class Game extends Phaser.Scene {
     flecha.body.setAllowGravity(false);
 
     this.jugador.get().setY(this.sys.game.config.height - Settings.jugador.offSetY);
+    this.jugador.get().setData('fin-pulsacion', false);
 
     Settings.flecha.lanzamientoNro ++;
     console.log(Settings.flecha.lanzamientoNro);
 
+    this.barrafuerza.get().setScale(0.1, 1);
     this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro].setData('estado', 'pre');
     this.cameras.main.startFollow(this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro]);
   }
-  
+
   crear_colliders() {
 
     this.physics.add.collider(this.jugador.get(), this.tilesuelo.get());
