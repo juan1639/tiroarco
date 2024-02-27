@@ -21,7 +21,7 @@ export class Jugador {
         this.jugador.setData('multiplicador', 300);
 
         this.jugador.setCollideWorldBounds(true);
-        this.jugador.setFrame(11).setDepth(Settings.depth.jugador);
+        this.jugador.setVisible(false).setFrame(11).setDepth(Settings.depth.jugador);
 
         this.controles = this.relatedScene.input.keyboard.createCursorKeys();
 
@@ -89,5 +89,57 @@ export class Jugador {
 
     get() {
         return this.jugador;
+    }
+}
+
+// ===========================================================================
+export class JugadorAnima {
+
+    constructor(scene) {
+        this.relatedScene = scene;
+    }
+
+    create() {
+
+        this.jugadoranima = this.relatedScene.physics.add.sprite(
+            this.relatedScene.diana.get().getChildren()[0].x - 100,
+            this.relatedScene.sys.game.config.height - Settings.jugador.offSetY,
+            'jugador'
+        );
+
+        this.jugadoranima.setCollideWorldBounds(true);
+        this.jugadoranima.setFrame(10).setFlipX(true).setDepth(Settings.depth.jugador);
+        this.jugadoranima.setVelocityX(-200);
+
+        this.relatedScene.anims.create({
+            key: 'jugador-anima-inicial',
+            frames: this.relatedScene.anims.generateFrameNumbers('jugador', {frames: [9, 10]}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.jugadoranima.anims.play('jugador-anima-inicial');
+
+        console.log(this.jugadoranima);
+    }
+
+    update() {
+
+        if (this.jugadoranima.x <= this.relatedScene.sys.game.config.width / Settings.jugador.offSetX) {
+            Settings.setAnimaInicial(false);
+            this.jugadoranima.destroy();
+
+            this.relatedScene.jugador.get().setVisible(true);
+            this.relatedScene.arco.get().setVisible(true);
+            this.relatedScene.flecha.get().getChildren()[0].setVisible(true);
+            
+            this.relatedScene.cameras.main.startFollow(
+                this.relatedScene.flecha.get().getChildren()[Settings.flecha.lanzamientoNro]
+            );
+        }
+    }
+
+    get() {
+        return this.jugadoranima;
     }
 }

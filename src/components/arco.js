@@ -11,7 +11,7 @@ export class Arco {
 
         this.arco = this.relatedScene.physics.add.sprite(x, y, 'arco');
 
-        this.arco.setScale(1, 0.8).setDepth(Settings.depth.arco);
+        this.arco.setVisible(false).setScale(1, 0.8).setDepth(Settings.depth.arco);
         this.arco.body.setAllowGravity(false);
 
         console.log(this.arco);
@@ -61,7 +61,7 @@ export class Flecha {
             fl.setData('ajuste-division-angulo', 20);
             fl.setData('estado', 'null'); // null / pre / lanzando / clavada
 
-            if (index === 0) fl.setData('estado', 'pre');
+            if (index === 0) fl.setData('estado', 'pre').setVisible(false);
         });
 
         dibuja_rectangulos(this.relatedScene, {

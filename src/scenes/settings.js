@@ -8,8 +8,11 @@ export class Settings {
         numberHeights: 1
     };
 
+    static animaInicial = true;
+
     static puntos = 0;
-    static hi = 550;
+    static incPuntos = 0;
+    static hi = 238;
 
     static jugador = {
         offSetX: 10,
@@ -65,12 +68,20 @@ export class Settings {
     };
 
     // -----------------------------------------------
+    static isAnimaInicial() {
+        return Settings.animaInicial;
+    }
+
     static getScreen() {
         return Settings.screen;
     }
 
     static getPuntos() {
         return Settings.puntos;
+    }
+
+    static getIncPuntos() {
+        return Settings.incPuntos;
     }
 
     static getRecord() {
@@ -82,8 +93,16 @@ export class Settings {
     }
 
     // -----------------------------------------------
+    static setAnimaInicial(bool) {
+        Settings.animaInicial = bool;
+    }
+
     static setPuntos(ptos) {
         Settings.puntos = ptos;
+    }
+
+    static setIncPuntos(incPtos) {
+        Settings.incPuntos = incPtos;
     }
 
     static setRecord(hiScore) {

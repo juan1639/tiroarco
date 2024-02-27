@@ -4,7 +4,7 @@
 // -----------------------------------------------------------------------------------------
 import { FondoScroll } from '../components/fondoscroll.js';
 import { BarraFuerza } from '../components/barra-fuerza.js';
-import { Jugador } from '../components/jugador.js';
+import { Jugador, JugadorAnima } from '../components/jugador.js';
 import { Arco, Flecha } from '../components/arco.js';
 import { Diana } from '../components/diana.js';
 import { Marcador } from '../components/marcador.js';
@@ -29,12 +29,17 @@ export class Game extends Phaser.Scene {
     this.arco = new Arco(this);
     this.flecha = new Flecha(this);
     this.diana = new Diana(this);
+    this.jugadoranima = new JugadorAnima(this);
 
     const ancho = this.sys.game.config.width;
     const alto = this.sys.game.config.height;
 
     this.marcadorPtos = new Marcador(this, {
       x: 10, y: -50, size: 35, txt: ' Puntos: ', color: '#adf', id: 0
+    });
+
+    this.marcadorIncPtos = new Marcador(this, {
+      x: Math.floor(ancho / 2.8), y: -50, size: 35, txt: ' ', color: '#aff', id: 0
     });
 
     this.marcadorHi = new Marcador(this, {
@@ -65,18 +70,21 @@ export class Game extends Phaser.Scene {
     this.arco.create(this.jugador.get().x, this.jugador.get().y);
     this.flecha.create();
     this.diana.create();
+    this.jugadoranima.create();
 
     this.marcadorPtos.create();
+    this.marcadorIncPtos.create();
     this.marcadorHi.create();
     // this.jugadorSV.create();
     this.botonfullscreen.create();
 
     this.mouse_showXY = {
-      create: this.add.text(this.jugador.get().x, this.jugador.get().y - 100, ' ', { fill: '#111' }),
+      create: this.add.text(10, 50, ' ', { fill: '#111' }),
       show_mouseXY: true
     }
 
-    this.cameras.main.startFollow(this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro]);
+    this.cameras.main.startFollow(this.jugadoranima.get());
+    // this.cameras.main.startFollow(this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro]);
 
     this.crear_colliders();
   }
@@ -84,6 +92,8 @@ export class Game extends Phaser.Scene {
   update() {
 
     // this.pointer_showXY(this.mouse_showXY);
+    if (Settings.isAnimaInicial()) this.jugadoranima.update();
+    
     this.jugador.update();
     this.arco.update(this.jugador.get().x, this.jugador.get().y);
     this.flecha.update();
@@ -132,28 +142,42 @@ export class Game extends Phaser.Scene {
 
     if (flecha.getData('estado') === 'clavada') return;
 
-    console.log(puntuacion);
+    setTimeout(() => {
+
+      Settings.flecha.lanzamientoNro ++;
+      console.log(Settings.flecha.lanzamientoNro);
+
+      this.barrafuerza.get().setScale(0.1, 1);
+      this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro].setData('estado', 'pre');
+      this.cameras.main.startFollow(this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro]);
+    }, 3000);
 
     flecha.setData('estado', 'clavada');
     flecha.setVelocityX(0).setVelocityY(0);
     flecha.body.setAllowGravity(false);
 
-    if (clavarDiana) flecha.setX(flecha.x + flecha.getData('ajuste-clavar-diana'));
+    if (clavarDiana) {
+
+      flecha.setX(flecha.x + flecha.getData('ajuste-clavar-diana'));
+
+      const calculaIncPtos = (Settings.diana.nroElementos - puntuacion) * 5 + Phaser.Math.Between(0, 2);
+
+      Settings.setIncPuntos(calculaIncPtos);
+      this.marcadorIncPtos.update(' ', calculaIncPtos);
+      Settings.setPuntos(Settings.getPuntos() + calculaIncPtos);
+      this.marcadorPtos.update(' Puntos: ', Settings.getPuntos());
+
+      console.log(puntuacion, calculaIncPtos);
+    }
 
     this.jugador.get().setY(this.sys.game.config.height - Settings.jugador.offSetY);
     this.jugador.get().setData('fin-pulsacion', false);
-
-    Settings.flecha.lanzamientoNro ++;
-    console.log(Settings.flecha.lanzamientoNro);
-
-    this.barrafuerza.get().setScale(0.1, 1);
-    this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro].setData('estado', 'pre');
-    this.cameras.main.startFollow(this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro]);
   }
 
   crear_colliders() {
 
     this.physics.add.collider(this.jugador.get(), this.tilesuelo.get());
+    this.physics.add.collider(this.jugadoranima.get(), this.tilesuelo.get());
 
     this.physics.add.collider(
       this.flecha.get(), this.tilesuelo.get(), (flecha, suelo) => this.nextFlecha_cambioCamera(suelo, 0, false)
