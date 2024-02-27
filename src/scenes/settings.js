@@ -26,6 +26,16 @@ export class Settings {
         offSetY: 80
     };
 
+    static diana = {
+        nroElementos: 16,
+        x: Settings.screen.width * (Settings.screen.numberWidths - 2),
+        y: 420,
+        ancho: 2,
+        alto: 200,
+        scaleX: 1,
+        scaleY: 1
+    };
+
     static barraFuerza = {
         x: 0,
         y: 60,
@@ -40,6 +50,7 @@ export class Settings {
         jugador: 20,
         arco: 30,
         flecha: 35,
+        diana: 40,
         marcadores: 50,
         textos: 60
     };

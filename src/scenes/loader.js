@@ -10,6 +10,7 @@ export function loader(scene) {
   
   scene.load.image('tile-suelo', './src/img/tile-suelo.png');
   scene.load.image('barra-fuerza', './src/img/barra-energia.png');
+  scene.load.image('diana', './src/img/diana-tiroArco.png');
 
   // scene.load.image('arco', './src/img/arco1.png');
   scene.load.image('arco', './src/img/arco-v2.png');

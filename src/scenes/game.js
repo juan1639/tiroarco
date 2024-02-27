@@ -6,6 +6,7 @@ import { FondoScroll } from '../components/fondoscroll.js';
 import { BarraFuerza } from '../components/barra-fuerza.js';
 import { Jugador } from '../components/jugador.js';
 import { Arco, Flecha } from '../components/arco.js';
+import { Diana } from '../components/diana.js';
 import { Marcador } from '../components/marcador.js';
 import { Textos } from '../components/textos.js';
 import { BotonNuevaPartida, BotonFullScreen } from '../components/boton-nuevapartida.js';
@@ -27,6 +28,7 @@ export class Game extends Phaser.Scene {
     this.jugador = new Jugador(this);
     this.arco = new Arco(this);
     this.flecha = new Flecha(this);
+    this.diana = new Diana(this);
 
     const ancho = this.sys.game.config.width;
     const alto = this.sys.game.config.height;
@@ -62,6 +64,7 @@ export class Game extends Phaser.Scene {
     this.jugador.create();
     this.arco.create(this.jugador.get().x, this.jugador.get().y);
     this.flecha.create();
+    this.diana.create();
 
     this.marcadorPtos.create();
     this.marcadorHi.create();
@@ -124,9 +127,11 @@ export class Game extends Phaser.Scene {
     // console.log(this.mapa_scores);
   }
 
-  nextFlecha_cambioCamera(flecha) {
+  nextFlecha_cambioCamera(flecha, puntuacion) {
 
     if (flecha.getData('estado') === 'clavada') return;
+
+    console.log(puntuacion);
 
     flecha.setData('estado', 'clavada');
     flecha.setVelocityX(0).setVelocityY(0);
@@ -148,7 +153,11 @@ export class Game extends Phaser.Scene {
     this.physics.add.collider(this.jugador.get(), this.tilesuelo.get());
 
     this.physics.add.collider(
-      this.flecha.get(), this.tilesuelo.get(), (flecha, suelo) => this.nextFlecha_cambioCamera(suelo)
+      this.flecha.get(), this.tilesuelo.get(), (flecha, suelo) => this.nextFlecha_cambioCamera(suelo, 0)
+    );
+
+    this.physics.add.collider(
+      this.flecha.get(), this.diana.get(), (flecha, diana) => this.nextFlecha_cambioCamera(flecha, diana.getData('index'))
     );
   }
 

@@ -52,8 +52,11 @@ export class Flecha {
 
         this.flecha.children.iterate((fl, index) => {
 
-            fl.setScale(1, 1).setDepth(Settings.depth.flecha).setVelocityX(0).setVelocityY(0);
+            fl.setScale(1, 1).setAngle(0).setDepth(Settings.depth.flecha);
+            fl.setVelocityX(0).setVelocityY(0);
+            fl.setCollideWorldBounds(true);
             fl.body.setAllowGravity(false);
+            fl.setData('angulo', 7);
             fl.setData('estado', 'null'); // null / pre / lanzando / clavada
 
             if (index === 0) fl.setData('estado', 'pre');
@@ -77,6 +80,16 @@ export class Flecha {
             if (fl.getData('estado') === 'pre') {
                 fl.setX(this.relatedScene.sys.game.config.width / 10 + Settings.flecha.offSetX);
                 fl.setY(this.relatedScene.sys.game.config.height - Settings.flecha.offSetY);
+            }
+
+            if (fl.getData('estado') === 'lanzando' && fl.body.velocity.y >= 0) {
+
+                fl.setAngle(fl.getData('angulo'));
+            }
+
+            if (fl.getData('estado') === 'lanzando' && fl.body.velocity.y < 0) {
+
+                fl.setAngle(-fl.getData('angulo'));
             }
         });
     }
