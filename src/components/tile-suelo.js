@@ -1,3 +1,4 @@
+import { Settings } from "../scenes/settings.js";
 
 export class TileSuelo {
 
@@ -15,7 +16,7 @@ export class TileSuelo {
             -this.relatedScene.sys.game.config.width / 2, posY, 'tile-suelo'
         );
 
-        this.tilesuelo.setOrigin(0, 0.5).setScale(37.5, 1).setDepth(10);
+        this.tilesuelo.setOrigin(0, 0.5).setScale(37.5, 1).setDepth(Settings.depth.tileSuelo);
         this.tilesuelo.setImmovable(true);
         this.tilesuelo.body.setAllowGravity(false);
 

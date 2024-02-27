@@ -1,3 +1,4 @@
+import { Settings } from "../scenes/settings.js";
 
 export class Arco {
 
@@ -9,7 +10,7 @@ export class Arco {
 
         this.arco = this.relatedScene.physics.add.sprite(x, y, 'arco');
 
-        this.arco.setScale(1, 0.9).setDepth(20);
+        this.arco.setScale(1, 0.8).setDepth(Settings.depth.arco);
         this.arco.body.setAllowGravity(false);
 
         console.log(this.arco);
@@ -17,7 +18,7 @@ export class Arco {
 
     update(x, y) {
 
-        const updateX = x + 25;
+        const updateX = x + 1;
         const updateY = y + 12;
 
         this.arco.setX(updateX).setY(updateY);
@@ -35,24 +36,40 @@ export class Flecha {
         this.relatedScene = scene;
     }
 
-    create(x, y) {
+    create() {
 
-        this.flecha = this.relatedScene.physics.add.sprite(x, y, 'flecha');
+        this.flecha = this.relatedScene.physics.add.group();
 
-        this.flecha.setScale(1, 1).setDepth(35).setVelocityX(400).setVelocityY(-1000);
-        this.flecha.body.setAllowGravity(true);
+        for (let i = 0; i < Settings.flecha.nroFlechas; i ++) {
+
+            this.flecha.create(
+                Settings.flecha.iniX,
+                this.relatedScene.sys.game.config.height - Settings.flecha.iniY - i * 20,
+                'flecha'
+            );
+        }
+
+        this.flecha.children.iterate((fl, index) => {
+
+            fl.setScale(1, 1).setDepth(Settings.depth.flecha).setVelocityX(0).setVelocityY(0);
+            fl.body.setAllowGravity(false);
+            fl.setData('estado', 'null'); // null / pre / lanzando / clavada
+
+            if (index === 0) fl.setData('estado', 'pre');
+        });
 
         console.log(this.flecha);
     }
 
-    update(x, y) {
+    update() {
 
-        if (this.relatedScene.jugador.get().body.touching.down) return;
+        this.flecha.children.iterate(fl => {
 
-        const updateX = x + 25;
-        const updateY = y + 12;
-
-        this.flecha.setX(updateX).setY(updateY);
+            if (fl.getData('estado') === 'pre') {
+                fl.setX(this.relatedScene.sys.game.config.width / 10 + Settings.flecha.offSetX);
+                fl.setY(this.relatedScene.sys.game.config.height - Settings.flecha.offSetY);
+            }
+        });
     }
     
     get() {

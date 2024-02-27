@@ -21,7 +21,7 @@ export class Marcador {
             fontSize: size + 'px', fill: color, fontFamily: 'verdana, arial, sans-serif', fontStyle: 'bold'
         });
 
-        this.marcador.setDepth(50);
+        this.marcador.setDepth(Settings.depth.marcadores);
 
         console.log(this.marcador);
     }

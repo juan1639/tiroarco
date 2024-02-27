@@ -25,22 +25,21 @@ export class MenuPrincipal extends Phaser.Scene {
     preload() {
         
         const txt = this.add.text(
-            Math.floor(this.sys.game.config.width / 2), Math.floor(this.sys.game.config.height / 2),
+            Math.floor(this.sys.game.config.width / 3), Math.floor(this.sys.game.config.height / 2),
             ' Cargando...', {
                 fontSize: '50px',
                 fill: '#ffa',
                 fontFamily: 'verdana, arial, sans-serif'
             }
         );
-        
-        // txt.setX(centrar_txt(txt, this.sys.game.config.width));
 
-        this.tweens.add({
-            targets: txt,
-            angle: 359,
-            yoyo: false,
-            duration: 9000,
-            repeat: -1
+        this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
+        const bar = this.add.rectangle(512-230, 384, 4, 28, 0xffff00);
+
+        this.load.on('progress', (progress) => {
+
+            //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
+            bar.width = 4 + (460 * progress);
         });
         
         loader(this);
@@ -50,7 +49,7 @@ export class MenuPrincipal extends Phaser.Scene {
         
         // this.sonidoMenuSelect = this.sound.add('moneda-mario');
 
-        const aparecerBoton = 1900;
+        const aparecerBoton = 100; // 1900
 
         this.fondoscroll.create();
         

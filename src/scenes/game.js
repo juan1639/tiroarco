@@ -53,13 +53,12 @@ export class Game extends Phaser.Scene {
     this.sonidos_set();
     this.set_camerasMain();
     this.set_cameras_marcadores();
-    this.set_fases_lanzamiento();
 
     this.fondoscroll.create();
     this.tilesuelo.create();
     this.jugador.create();
     this.arco.create(this.jugador.get().x, this.jugador.get().y);
-    this.flecha.create(this.jugador.get().x, this.jugador.get().y);
+    this.flecha.create();
 
     this.marcadorPtos.create();
     this.marcadorHi.create();
@@ -71,7 +70,7 @@ export class Game extends Phaser.Scene {
       show_mouseXY: true
     }
 
-    this.cameras.main.startFollow(this.flecha.get());
+    this.cameras.main.startFollow(this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro]);
 
     this.crear_colliders();
   }
@@ -81,7 +80,7 @@ export class Game extends Phaser.Scene {
     // this.pointer_showXY(this.mouse_showXY);
     this.jugador.update();
     this.arco.update(this.jugador.get().x, this.jugador.get().y);
-    this.flecha.update(this.jugador.get().x, this.jugador.get().y);
+    this.flecha.update();
   }
 
   sonidos_set() {
@@ -100,12 +99,12 @@ export class Game extends Phaser.Scene {
     const { numberWidths, numberHeights } = Settings.getScreen();
 
     this.cameras.main.setBounds(
-      -800, 0,
+      -this.sys.game.config.width, 0,
       Math.floor(this.sys.game.config.width * numberWidths), Math.floor(this.sys.game.config.height * numberHeights)
     );
 
     this.physics.world.setBounds(
-      -800, 0,
+      -this.sys.game.config.width, 0,
       Math.floor(this.sys.game.config.width * numberWidths), Math.floor(this.sys.game.config.height * numberHeights)
     );
 
@@ -122,13 +121,30 @@ export class Game extends Phaser.Scene {
     // console.log(this.mapa_scores);
   }
 
-  set_fases_lanzamiento() {
+  nextFlecha_cambioCamera(flecha) {
 
-    this.faseLanzamiento = {
-      pre: true,
-      lanzando: false,
-      banderaColision: false
-    };
+    if (flecha.getData('estado') === 'clavada') return;
+
+    flecha.setData('estado', 'clavada');
+    flecha.setVelocityX(0).setVelocityY(0);
+    flecha.body.setAllowGravity(false);
+
+    this.jugador.get().setY(this.sys.game.config.height - Settings.jugador.offSetY);
+
+    Settings.flecha.lanzamientoNro ++;
+    console.log(Settings.flecha.lanzamientoNro);
+
+    this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro].setData('estado', 'pre');
+    this.cameras.main.startFollow(this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro]);
+  }
+  
+  crear_colliders() {
+
+    this.physics.add.collider(this.jugador.get(), this.tilesuelo.get());
+
+    this.physics.add.collider(
+      this.flecha.get(), this.tilesuelo.get(), (flecha, suelo) => this.nextFlecha_cambioCamera(suelo)
+    );
   }
 
   texto_preparado() {
@@ -144,26 +160,6 @@ export class Game extends Phaser.Scene {
     });
 
     setTimeout(() => this.txt.get().destroy(), 1900);
-  }
-
-  crear_colliders() {
-
-    this.physics.add.collider(this.jugador.get(), this.tilesuelo.get());
-    this.physics.add.collider(this.flecha.get(), this.tilesuelo.get(), () => {
-
-      this.faseLanzamiento.pre = true;
-      this.faseLanzamiento.lanzando = false;
-      this.jugador.get().setY(this.sys.game.config.height - 120);
-      this.flecha.get().body.setAllowGravity(false);
-      this.flecha.get().setVelocityX(0);
-      // this.flecha.get().setVelocityX(900);
-      // this.flecha.get().setVelocityY(-950);
-
-    }, () => {
-
-      if (this.faseLanzamiento.banderaColision) return false;
-      return true;
-    });
   }
 
   pointer_showXY({create, show_mouseXY}) {

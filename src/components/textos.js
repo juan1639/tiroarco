@@ -1,4 +1,5 @@
 import { centrar_txt } from "../functions/functions.js";
+import { Settings } from "../scenes/settings.js";
 
 export class Textos {
 
@@ -38,7 +39,7 @@ export class Textos {
             fill: fll,
             fontFamily: family
         });
-        this.txt.setDepth(25);
+        this.txt.setDepth(Settings.depth.textos);
 
         this.centrar(texto, screenWidth, multip);
         this.crear_tweens(texto);

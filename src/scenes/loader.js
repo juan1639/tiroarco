@@ -10,12 +10,16 @@ export function loader(scene) {
   
   scene.load.image('tile-suelo', './src/img/tile-suelo.png');
 
-  scene.load.image('arco', './src/img/arco1.png');
-  scene.load.image('flecha', './src/img/flecha.png');
+  // scene.load.image('arco', './src/img/arco1.png');
+  scene.load.image('arco', './src/img/arco-v2.png');
+  // scene.load.image('flecha', './src/img/flecha.png');
+  scene.load.image('flecha', './src/img/flecha-v2.png');
   scene.load.image('flecha-c', './src/img/flecha-c.png');
   
   scene.load.spritesheet('jugador', './src/img/Ssheet_enemigo.png', {frameWidth: 80, frameHeight: 110});
 
+  // -------------------------------------------------------------------------
+  //  Archivos de audio
   // -------------------------------------------------------------------------
 
   /* scene.load.audio('musica-fondo', './src/audio/8-bit-arcade-1.mp3');

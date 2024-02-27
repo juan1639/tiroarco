@@ -1,3 +1,4 @@
+import { Settings } from "../scenes/settings.js";
 
 export class Jugador {
 
@@ -7,15 +8,16 @@ export class Jugador {
 
     create() {
 
-        const posX = this.relatedScene.sys.game.config.width;
         this.jugador = this.relatedScene.physics.add.sprite(
-            posX / 10, this.relatedScene.sys.game.config.height - 120, 'jugador'
+            this.relatedScene.sys.game.config.width / Settings.jugador.offSetX,
+            this.relatedScene.sys.game.config.height - Settings.jugador.offSetY,
+            'jugador'
         );
 
         this.jugador.setData('new-try', true);
 
         this.jugador.setCollideWorldBounds(true);
-        this.jugador.setFrame(11).setDepth(30);
+        this.jugador.setFrame(11).setDepth(Settings.depth.jugador);
 
         this.controles = this.relatedScene.input.keyboard.createCursorKeys();
 
@@ -24,12 +26,19 @@ export class Jugador {
 
     update() {
 
-        if (this.jugador.body.touching.down && this.relatedScene.faseLanzamiento.pre && this.controles.space.isDown) {
+        if (this.jugador.body.touching.down &&
+            (this.relatedScene.flecha.get().getChildren()[Settings.flecha.lanzamientoNro].getData('estado') === 'pre') &&
+            this.controles.space.isDown
+        ) {
 
-            this.relatedScene.faseLanzamiento.pre = false;
-            this.relatedScene.faseLanzamiento.lanzando = true;
-            this.relatedScene.flecha.get().setVelocityX(700).setVelocityY(-700);
-            this.relatedScene.flecha.get().body.setAllowGravity(true);
+            this.relatedScene.flecha.get().getChildren()[Settings.flecha.lanzamientoNro]
+                .setData('estado', 'lanzando');
+
+            this.relatedScene.flecha.get().getChildren()[Settings.flecha.lanzamientoNro]
+                .setVelocityX(700).setVelocityY(-700);
+
+            this.relatedScene.flecha.get().getChildren()[Settings.flecha.lanzamientoNro].body
+                .setAllowGravity(true);
         }
     }
     
