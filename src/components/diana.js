@@ -8,12 +8,14 @@ export class Diana {
 
     create() {
 
+        const randomDiana = Phaser.Math.Between(0, this.relatedScene.sys.game.config.width);
+
         this.diana = this.relatedScene.physics.add.group();
 
         for (let i = 0; i < Settings.diana.nroElementos; i ++) {
 
             this.diana.create(
-                Settings.diana.x + i * Settings.diana.ancho,
+                Settings.diana.x - randomDiana + i * Settings.diana.ancho,
                 Settings.diana.y,
                 'diana'
             );

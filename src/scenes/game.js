@@ -34,11 +34,11 @@ export class Game extends Phaser.Scene {
     const alto = this.sys.game.config.height;
 
     this.marcadorPtos = new Marcador(this, {
-      x: 10, y: -50, size: 35, txt: ' Puntos: ', color: '#fff', id: 0
+      x: 10, y: -50, size: 35, txt: ' Puntos: ', color: '#adf', id: 0
     });
 
     this.marcadorHi = new Marcador(this, {
-      x: Math.floor(ancho / 2), y: -50, size: 35, txt: ' Record: ', color: '#fff', id: 2
+      x: Math.floor(ancho / 2), y: -50, size: 35, txt: ' Record: ', color: '#8df', id: 2
     });
 
     this.botonfullscreen = new BotonFullScreen(this, {
@@ -121,13 +121,14 @@ export class Game extends Phaser.Scene {
 
     var { x, y, ancho, alto, scrollX, scrollY } = Settings.getCameraScores();
     
-    this.mapa_scores = this.cameras.add(x, y, ancho, alto).setZoom(0.9).setName('view-scores').setAlpha(0.9).setOrigin(0, 0);
+    this.mapa_scores = this.cameras.add(x, y, ancho, alto).setZoom(0.9).setName('view-scores').setAlpha(1).setOrigin(0, 0);
     this.mapa_scores.scrollX = scrollX;
     this.mapa_scores.scrollY = scrollY;
-    // console.log(this.mapa_scores);
+    this.mapa_scores.setBackgroundColor(0x00aabb);
+    console.log(this.mapa_scores);
   }
 
-  nextFlecha_cambioCamera(flecha, puntuacion) {
+  nextFlecha_cambioCamera(flecha, puntuacion, clavarDiana) {
 
     if (flecha.getData('estado') === 'clavada') return;
 
@@ -136,6 +137,8 @@ export class Game extends Phaser.Scene {
     flecha.setData('estado', 'clavada');
     flecha.setVelocityX(0).setVelocityY(0);
     flecha.body.setAllowGravity(false);
+
+    if (clavarDiana) flecha.setX(flecha.x + flecha.getData('ajuste-clavar-diana'));
 
     this.jugador.get().setY(this.sys.game.config.height - Settings.jugador.offSetY);
     this.jugador.get().setData('fin-pulsacion', false);
@@ -153,11 +156,11 @@ export class Game extends Phaser.Scene {
     this.physics.add.collider(this.jugador.get(), this.tilesuelo.get());
 
     this.physics.add.collider(
-      this.flecha.get(), this.tilesuelo.get(), (flecha, suelo) => this.nextFlecha_cambioCamera(suelo, 0)
+      this.flecha.get(), this.tilesuelo.get(), (flecha, suelo) => this.nextFlecha_cambioCamera(suelo, 0, false)
     );
 
     this.physics.add.collider(
-      this.flecha.get(), this.diana.get(), (flecha, diana) => this.nextFlecha_cambioCamera(flecha, diana.getData('index'))
+      this.flecha.get(), this.diana.get(), (flecha, diana) => this.nextFlecha_cambioCamera(flecha, diana.getData('index'), true)
     );
   }
 

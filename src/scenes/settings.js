@@ -46,7 +46,7 @@ export class Settings {
 
     static depth = {
         fondoScroll: 0,
-        tileSuelo: 10,
+        tileSuelo: 45,
         jugador: 20,
         arco: 30,
         flecha: 35,

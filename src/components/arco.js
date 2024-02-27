@@ -56,7 +56,9 @@ export class Flecha {
             fl.setVelocityX(0).setVelocityY(0);
             fl.setCollideWorldBounds(true);
             fl.body.setAllowGravity(false);
+            fl.setData('ajuste-clavar-diana', 20);
             fl.setData('angulo', 7);
+            fl.setData('ajuste-division-angulo', 20);
             fl.setData('estado', 'null'); // null / pre / lanzando / clavada
 
             if (index === 0) fl.setData('estado', 'pre');
@@ -82,14 +84,9 @@ export class Flecha {
                 fl.setY(this.relatedScene.sys.game.config.height - Settings.flecha.offSetY);
             }
 
-            if (fl.getData('estado') === 'lanzando' && fl.body.velocity.y >= 0) {
+            if (fl.getData('estado') === 'lanzando') {
 
-                fl.setAngle(fl.getData('angulo'));
-            }
-
-            if (fl.getData('estado') === 'lanzando' && fl.body.velocity.y < 0) {
-
-                fl.setAngle(-fl.getData('angulo'));
+                fl.setAngle(fl.body.velocity.y / fl.getData('ajuste-division-angulo'));
             }
         });
     }
