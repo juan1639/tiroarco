@@ -37,7 +37,12 @@ export class Jugador {
 
     incrementando_fuerza_pulsando() {
 
-        if (this.jugador.getData('ini-pulsacion') && !this.jugador.getData('fin-pulsacion')) {
+        if ((this.jugador.getData('ini-pulsacion') && !this.jugador.getData('fin-pulsacion') && Settings.controlElegido.teclado) ||
+            (this.jugador.getData('ini-pulsacion') &&
+            !this.jugador.getData('fin-pulsacion') &&
+            this.relatedScene.input.activePointer.isDown &&
+            Settings.controlElegido.mobile)
+        ){
 
             console.log('...sum');
             this.jugador.setData('pow', this.jugador.getData('pow') + this.jugador.getData('inc-pow'));
@@ -51,7 +56,7 @@ export class Jugador {
             !this.jugador.getData('fin-pulsacion') &&
             !this.jugador.getData('ini-pulsacion') &&
             (this.relatedScene.flecha.get().getChildren()[Settings.flecha.lanzamientoNro].getData('estado') === 'pre') &&
-            this.controles.space.isDown
+            ((this.controles.space.isDown && Settings.controlElegido.teclado) || (this.relatedScene.input.activePointer.isDown && Settings.controlElegido.mobile))
         ) {
 
             console.log('pulsando...');
@@ -65,7 +70,7 @@ export class Jugador {
             !this.jugador.getData('fin-pulsacion') &&
             this.jugador.getData('ini-pulsacion') &&
             (this.relatedScene.flecha.get().getChildren()[Settings.flecha.lanzamientoNro].getData('estado') === 'pre') &&
-            this.controles.space.isUp
+            ((this.controles.space.isUp && Settings.controlElegido.teclado) || (!this.relatedScene.input.activePointer.isDown && Settings.controlElegido.mobile))
         ) {
             this.jugador.setData('fin-pulsacion', true);
             this.jugador.setData('ini-pulsacion', false);
@@ -129,10 +134,12 @@ export class JugadorAnima {
             Settings.setAnimaInicial(false);
             this.jugadoranima.destroy();
 
+            this.relatedScene.txt.get().setVisible(true);
+
             this.relatedScene.jugador.get().setVisible(true);
             this.relatedScene.arco.get().setVisible(true);
             this.relatedScene.flecha.get().getChildren()[0].setVisible(true);
-            
+
             this.relatedScene.cameras.main.startFollow(
                 this.relatedScene.flecha.get().getChildren()[Settings.flecha.lanzamientoNro]
             );

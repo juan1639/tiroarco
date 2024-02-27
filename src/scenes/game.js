@@ -8,8 +8,8 @@ import { Jugador, JugadorAnima } from '../components/jugador.js';
 import { Arco, Flecha } from '../components/arco.js';
 import { Diana } from '../components/diana.js';
 import { Marcador } from '../components/marcador.js';
+import { BotonFullScreen } from '../components/boton-nuevapartida.js';
 import { Textos } from '../components/textos.js';
-import { BotonNuevaPartida, BotonFullScreen } from '../components/boton-nuevapartida.js';
 import { play_sonidos } from '../functions/functions.js';
 import { Settings } from './settings.js';
 import { TileSuelo } from '../components/tile-suelo.js';
@@ -52,7 +52,6 @@ export class Game extends Phaser.Scene {
     });
 
     this.txt = new Textos(this);
-    this.botoninicio = new BotonNuevaPartida(this);
   }
 
   preload() {}
@@ -75,8 +74,9 @@ export class Game extends Phaser.Scene {
     this.marcadorPtos.create();
     this.marcadorIncPtos.create();
     this.marcadorHi.create();
-    // this.jugadorSV.create();
     this.botonfullscreen.create();
+
+    this.texto_preparado();
 
     this.mouse_showXY = {
       create: this.add.text(10, 50, ' ', { fill: '#111' }),
@@ -93,7 +93,7 @@ export class Game extends Phaser.Scene {
 
     // this.pointer_showXY(this.mouse_showXY);
     if (Settings.isAnimaInicial()) this.jugadoranima.update();
-    
+
     this.jugador.update();
     this.arco.update(this.jugador.get().x, this.jugador.get().y);
     this.flecha.update();
@@ -143,35 +143,36 @@ export class Game extends Phaser.Scene {
     if (flecha.getData('estado') === 'clavada') return;
 
     setTimeout(() => {
-
       Settings.flecha.lanzamientoNro ++;
       console.log(Settings.flecha.lanzamientoNro);
 
       this.barrafuerza.get().setScale(0.1, 1);
       this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro].setData('estado', 'pre');
       this.cameras.main.startFollow(this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro]);
-    }, 3000);
+    }, Settings.pausas.flechaClavada);
 
     flecha.setData('estado', 'clavada');
     flecha.setVelocityX(0).setVelocityY(0);
     flecha.body.setAllowGravity(false);
 
-    if (clavarDiana) {
-
-      flecha.setX(flecha.x + flecha.getData('ajuste-clavar-diana'));
-
-      const calculaIncPtos = (Settings.diana.nroElementos - puntuacion) * 5 + Phaser.Math.Between(0, 2);
-
-      Settings.setIncPuntos(calculaIncPtos);
-      this.marcadorIncPtos.update(' ', calculaIncPtos);
-      Settings.setPuntos(Settings.getPuntos() + calculaIncPtos);
-      this.marcadorPtos.update(' Puntos: ', Settings.getPuntos());
-
-      console.log(puntuacion, calculaIncPtos);
-    }
+    if (clavarDiana) this.impacto_diana_sumarPtos(flecha, puntuacion);
 
     this.jugador.get().setY(this.sys.game.config.height - Settings.jugador.offSetY);
     this.jugador.get().setData('fin-pulsacion', false);
+  }
+
+  impacto_diana_sumarPtos(flecha, puntuacion) {
+
+    flecha.setX(flecha.x + flecha.getData('ajuste-clavar-diana'));
+
+    const calculaIncPtos = (Settings.diana.nroElementos - puntuacion) * 5 + Phaser.Math.Between(0, 2);
+
+    Settings.setIncPuntos(calculaIncPtos);
+    this.marcadorIncPtos.update(' ', calculaIncPtos);
+    Settings.setPuntos(Settings.getPuntos() + calculaIncPtos);
+    this.marcadorPtos.update(' Puntos: ', Settings.getPuntos());
+
+    console.log(puntuacion, calculaIncPtos);
   }
 
   crear_colliders() {
@@ -194,13 +195,15 @@ export class Game extends Phaser.Scene {
     const top = Math.floor(this.sys.game.config.height / 2);
 
     this.txt.create({
-        x: left, y: top, texto: ' Preparado... ',
+        x: left, y: top, texto: ' Pulse y mantenga pulsado \n para tirar una flecha... ',
         size: 30, style: 'bold', oofx: 1, offy: 1, col: '#fff', blr: 15,
         fillShadow: true, fll: '#3a1', family: 'verdana, arial, sans-serif',
         screenWidth: this.sys.game.config.width, multip: 1
     });
 
-    setTimeout(() => this.txt.get().destroy(), 1900);
+    this.txt.get().setVisible(false).setX(0);
+
+    setTimeout(() => this.txt.get().destroy(), Settings.pausas.showTxtInicial);
   }
 
   pointer_showXY({create, show_mouseXY}) {

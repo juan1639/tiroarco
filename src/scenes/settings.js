@@ -1,6 +1,11 @@
 
 export class Settings {
 
+    static controlElegido = {
+        teclado: false,
+        mobile: true
+    };
+
     static screen = {
         width: 800,
         height: 600,
@@ -13,6 +18,11 @@ export class Settings {
     static puntos = 0;
     static incPuntos = 0;
     static hi = 238;
+
+    static pausas = {
+        flechaClavada: 2800,
+        showTxtInicial: 15000
+    };
 
     static jugador = {
         offSetX: 10,
