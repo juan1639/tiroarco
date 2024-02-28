@@ -3,5 +3,5 @@ usando la librería Phaser.
 
 <img src="./miniatura-tiroArco.png"/>
 
-https://juan1639.github.io/tiro-arco
+https://juan1639.github.io/tiroarco
 
