@@ -1,3 +1,4 @@
+import { play_sonidos } from "../functions/functions.js";
 import { Settings } from "../scenes/settings.js";
 
 export class Jugador {
@@ -29,6 +30,8 @@ export class Jugador {
     }
 
     update() {
+
+        if (Settings.isGameOver()) return;
 
         this.incrementando_fuerza_pulsando();
         this.pulsacion_inicial();
@@ -89,6 +92,7 @@ export class Jugador {
             console.log(this.jugador.getData('pow') * this.jugador.getData('multiplicador'));
 
             this.jugador.setData('pow', 0.1);
+            play_sonidos(this.relatedScene.sonidoArrow1, false, 0.9);
         }
     }
 

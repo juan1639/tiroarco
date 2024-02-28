@@ -14,6 +14,7 @@ export class Settings {
     };
 
     static animaInicial = true;
+    static gameOver = false;
 
     static puntos = 0;
     static incPuntos = 0;
@@ -82,6 +83,10 @@ export class Settings {
         return Settings.animaInicial;
     }
 
+    static isGameOver() {
+        return Settings.gameOver;
+    }
+
     static getScreen() {
         return Settings.screen;
     }
@@ -102,9 +107,17 @@ export class Settings {
         return Settings.cameraScores;
     }
 
+    static getFlechaNro() {
+        return Settings.flecha.lanzamientoNro;
+    }
+
     // -----------------------------------------------
     static setAnimaInicial(bool) {
         Settings.animaInicial = bool;
+    }
+
+    static setGameOver(bool) {
+        Settings.gameOver = bool;
     }
 
     static setPuntos(ptos) {
@@ -126,5 +139,9 @@ export class Settings {
         Settings.cameraScores.alto = alto;
         Settings.cameraScores.scrollX = scrollX;
         Settings.cameraScores.scrollY = scrollY;
+    }
+
+    static setFlechaNro(reset) {
+        Settings.flecha.lanzamientoNro = reset;
     }
 }

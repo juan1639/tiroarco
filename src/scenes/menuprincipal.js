@@ -47,11 +47,14 @@ export class MenuPrincipal extends Phaser.Scene {
     
     create() {
         
-        // this.sonidoMenuSelect = this.sound.add('moneda-mario');
+        this.sonidoMarioTuberias = this.sound.add('mario-tuberias');
 
-        const aparecerBoton = 100; // 1900
+        const aparecerBoton = 1800; // 1800
 
         this.fondoscroll.create();
+        this.add.image(
+            this.sys.game.config.width / 2, this.sys.game.config.height / 1.6, 'archery-img'
+        );
         
         // -----------------------------------------------------------
         const left = Math.floor(this.sys.game.config.width / 5.2);
@@ -73,7 +76,7 @@ export class MenuPrincipal extends Phaser.Scene {
             }
         ]).play();
 
-        // play_sonidos(this.sonidoMenuSelect, false, 0.7);
+        play_sonidos(this.sonidoMarioTuberias, false, 0.7);
 
         console.log(this.txt);
     }

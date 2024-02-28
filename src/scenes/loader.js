@@ -7,7 +7,8 @@ export function loader(scene) {
 
   scene.load.image('boton-nueva-partida', './src/img/boton-start.png');
   scene.load.spritesheet('boton-fullscreen', './src/img/boton-fullscreen.png', {frameWidth: 64, frameHeight: 64});
-  
+  scene.load.image('archery-img', './src/img/archeryImg.png');
+
   scene.load.image('tile-suelo', './src/img/tile-suelo.png');
   scene.load.image('barra-fuerza', './src/img/barra-energia.png');
   scene.load.image('diana', './src/img/diana-tiroArco.png');
@@ -23,10 +24,10 @@ export function loader(scene) {
   // -------------------------------------------------------------------------
   //  Archivos de audio
   // -------------------------------------------------------------------------
-
-  /* scene.load.audio('musica-fondo', './src/audio/8-bit-arcade-1.mp3');
-  scene.load.audio('dieT1', './src/audio/dieThrow1.ogg');
-  scene.load.audio('dieT2', './src/audio/dieThrow2.ogg');
-  scene.load.audio('moneda-mario', './src/audio/p-ping.mp3');
-  scene.load.audio('gameover', './src/audio/gameover.mp3'); */
+  scene.load.audio('mario-tuberias', './src/audio/mario-tuberias.mp3');
+  scene.load.audio('aplausos-birdie', './src/audio/aplausosbirdie.mp3');
+  scene.load.audio('aplausos-eagle', './src/audio/aplausoseagle.mp3');
+  scene.load.audio('arrow1', './src/audio/arrow1.mp3');
+  scene.load.audio('arrow2', './src/audio/arrow2.mp3');
+  scene.load.audio('abucheo', './src/audio/boooh.mp3');
 }

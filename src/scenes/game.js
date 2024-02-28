@@ -8,7 +8,7 @@ import { Jugador, JugadorAnima } from '../components/jugador.js';
 import { Arco, Flecha } from '../components/arco.js';
 import { Diana } from '../components/diana.js';
 import { Marcador } from '../components/marcador.js';
-import { BotonFullScreen } from '../components/boton-nuevapartida.js';
+import { BotonFullScreen, BotonNuevaPartida } from '../components/boton-nuevapartida.js';
 import { Textos } from '../components/textos.js';
 import { play_sonidos } from '../functions/functions.js';
 import { Settings } from './settings.js';
@@ -51,6 +51,7 @@ export class Game extends Phaser.Scene {
       ang: 0, scX: 0.8, scY: 0.6 
     });
 
+    this.botonrejugar = new BotonNuevaPartida(this);
     this.txt = new Textos(this);
   }
 
@@ -101,13 +102,11 @@ export class Game extends Phaser.Scene {
 
   sonidos_set() {
 
-    /* this.sonidoMusicaFondo = this.sound.add('musica-fondo');
-    if (!this.sonidoMusicaFondo.isPlaying) play_sonidos(this.sonidoMusicaFondo, true, 0.7);
-
-    this.sonidoDieT1 = this.sound.add('dieT1');
-    this.sonidoDieT2 = this.sound.add('dieT2');
-    this.sonidoMonedaMario = this.sound.add('moneda-mario');
-    this.sonidoGameOver = this.sound.add('gameover'); */
+    this.sonidoAplausosBirdie = this.sound.add('aplausos-birdie');
+    this.sonidoAplausosEagle = this.sound.add('aplausos-eagle');
+    this.sonidoAbucheo = this.sound.add('abucheo');
+    this.sonidoArrow1 = this.sound.add('arrow1');
+    this.sonidoArrow2 = this.sound.add('arrow2');
   }
   
   set_camerasMain() {
@@ -140,15 +139,24 @@ export class Game extends Phaser.Scene {
 
   nextFlecha_cambioCamera(flecha, puntuacion, clavarDiana) {
 
-    if (flecha.getData('estado') === 'clavada') return;
+    if (flecha.getData('estado') === 'clavada' || Settings.isGameOver()) return;
 
     setTimeout(() => {
       Settings.flecha.lanzamientoNro ++;
       console.log(Settings.flecha.lanzamientoNro);
 
       this.barrafuerza.get().setScale(0.1, 1);
-      this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro].setData('estado', 'pre');
-      this.cameras.main.startFollow(this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro]);
+
+      if (Settings.flecha.lanzamientoNro >= 10) {
+
+        console.log('game over');
+        Settings.setGameOver(true);
+        this.suenan_aplausos(flecha);
+
+      } else {
+        this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro].setData('estado', 'pre');
+        this.cameras.main.startFollow(this.flecha.get().getChildren()[Settings.flecha.lanzamientoNro]);
+      }
     }, Settings.pausas.flechaClavada);
 
     flecha.setData('estado', 'clavada');
@@ -163,6 +171,8 @@ export class Game extends Phaser.Scene {
 
   impacto_diana_sumarPtos(flecha, puntuacion) {
 
+    play_sonidos(this.sonidoArrow2, false, 0.9);
+
     flecha.setX(flecha.x + flecha.getData('ajuste-clavar-diana'));
 
     const calculaIncPtos = (Settings.diana.nroElementos - puntuacion) * 5 + Phaser.Math.Between(0, 2);
@@ -173,6 +183,27 @@ export class Game extends Phaser.Scene {
     this.marcadorPtos.update(' Puntos: ', Settings.getPuntos());
 
     console.log(puntuacion, calculaIncPtos);
+  }
+
+  suenan_aplausos(flecha) {
+
+    if (Settings.getPuntos() >= 400) {
+      play_sonidos(this.sonidoAplausosEagle, false, 0.9);
+    
+    } else if (Settings.getPuntos() >= 200) {
+      play_sonidos(this.sonidoAplausosBirdie, false, 0.9);
+
+    } else {
+      play_sonidos(this.sonidoAbucheo, false, 0.9);
+    }
+
+    if (Settings.getPuntos() > Settings.getRecord()) Settings.setRecord(Settings.getPuntos());
+
+    setTimeout(() => {
+      this.botonrejugar.create('prenivel', true);
+      this.botonrejugar.get().setX(flecha.x);
+
+    }, Settings.pausas.flechaClavada);
   }
 
   crear_colliders() {

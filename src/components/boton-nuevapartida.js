@@ -18,7 +18,7 @@ export class BotonNuevaPartida {
 
     let posY = 1.5;
     if (siguienteScene === 'game') posY = 1.25;
-    if (gameover) posY = 0.7;
+    if (gameover) posY = 3;
 
     this.boton = this.relatedScene.add.sprite(Math.floor(ancho / 2), Math.floor(alto / posY), botonCondicional).setInteractive();
     this.boton.setScale(0.6).setAngle(1).setDepth(30);
@@ -49,6 +49,10 @@ export class BotonNuevaPartida {
       duration: 3000,
       repeat: -1
     });
+  }
+
+  get() {
+    return this.boton;
   }
 }
 
